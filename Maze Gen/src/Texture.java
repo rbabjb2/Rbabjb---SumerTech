@@ -13,6 +13,7 @@ public class Texture {
         filePath = location;
         this.size = size;
         pixels = new int[size * size];
+        load();
     }
 
     private void load() {
@@ -26,4 +27,6 @@ public class Texture {
         }
     }
     public static Texture brick = new Texture("res/redbrick.png", 64);
+    public static Texture wood = new Texture("res/wood.png", 64);
+    public static Texture blueStone = new Texture("res/bluestone.png", 64);
 }

@@ -3,8 +3,7 @@ import java.awt.event.*;
 public class Camera implements KeyListener {
     public double posX, posY, dirY, dirX, planeY, planeX;
     public boolean left, right, forward, back;
-    public final double MOVE_SPEED = 0.12;
-    // Move speed was 0.08
+    public final double MOVE_SPEED = 0.08;
     public final double ROTATION_SPEED = 0.045;
     public int[][] map;
 

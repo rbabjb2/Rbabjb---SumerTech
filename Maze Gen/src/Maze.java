@@ -19,25 +19,40 @@ public class Maze extends JFrame implements Runnable {
     public Screen screen;
 
     public Maze() {
-        image = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(680, 520, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
         textures.add(Texture.brick);
-        screen = new Screen(maze, textures, 640, 480, gridSize);
+        textures.add(Texture.wood);
+        textures.add(Texture.blueStone);
+        screen = new Screen(maze, textures, 680, 520, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                    maze[i][j] = 1;
+                maze[i][j] = 1;
             }
-            
 
         }
         maze[gridSize - 2][gridSize - 1] = 0;
         generateMaze(1, 1);
+        for (int y = gridSize / 2; y < gridSize; y++) {
+            for (int x = 0; x < gridSize / 2; x++) {
+                if (maze[x][y] == 1) {
+                    maze[x][y] = 2;
+                }
+            }
+        }
+        for (int y = 0; y < gridSize / 2; y++) {
+            for (int x = 0; x < gridSize / 2; x++) {
+                if (maze[x][y] == 1) {
+                    maze[x][y] = 3;
+                }
+            }
+        }
         printScreen();
-        camera = new Camera(1.5, 1.5, 0, -1, 0, -0.66, maze);
+        camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
         addKeyListener(camera);
-        setSize(640, 480);
+        setSize(680, 520);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBackground(Color.PINK);
@@ -138,7 +153,7 @@ public class Maze extends JFrame implements Runnable {
             return;
         }
         Graphics graphic = bufferStrat.getDrawGraphics();
-        graphic.drawImage(image, 0 , 0, image.getWidth(), image.getHeight(), null);
+        graphic.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         bufferStrat.show();
     }
 }
