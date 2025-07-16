@@ -53,10 +53,10 @@ public class Camera implements KeyListener {
         }
 
         if (back) {
-            if (map[(int) (posX - (dirX * MOVE_SPEED))][(int) posY] == 0) {
+            if (map[(int) (posX - (dirX * MOVE_SPEED))][(int) posY] == 0 || map[(int) (posX - (dirX * MOVE_SPEED))][(int) posY] == 5) {
                 posX -= dirX * MOVE_SPEED;
             }
-            if (map[(int) posX][(int) (posY - (dirY * MOVE_SPEED))] == 0) {
+            if (map[(int) posX][(int) (posY - (dirY * MOVE_SPEED))] == 0 || map[(int) posX][(int) (posY - (dirY * MOVE_SPEED))] == 5) {
                 posY -= dirY * MOVE_SPEED;
             }
         }

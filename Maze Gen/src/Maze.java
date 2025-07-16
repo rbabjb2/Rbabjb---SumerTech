@@ -7,11 +7,11 @@ import java.awt.image.*;
 @SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
     static Random random = new Random();
-    static int gridSize = 45;
+    static int gridSize = 31;
+    TopDown topDown;
     private static int maze[][] = new int[gridSize][gridSize];
     private Thread thread;
     private boolean isRunning;
-    Color color = new Color(255, 255, 0);
     private BufferedImage image;
     public int[] pixels;
     public ArrayList<Texture> textures;
@@ -26,6 +26,8 @@ public class Maze extends JFrame implements Runnable {
         textures.add(Texture.brick);
         textures.add(Texture.wood);
         textures.add(Texture.blueStone);
+        textures.add(Texture.rat);
+        textures.add(Texture.flag);
         screen = new Screen(maze, textures, 680, 520, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
@@ -33,7 +35,7 @@ public class Maze extends JFrame implements Runnable {
             }
 
         }
-        maze[gridSize - 2][gridSize - 1] = 0;
+        maze[gridSize - 2][gridSize - 1] = 5;
         generateMaze(1, 1);
         for (int y = gridSize / 2; y < gridSize; y++) {
             for (int x = 0; x < gridSize / 2; x++) {
@@ -42,15 +44,26 @@ public class Maze extends JFrame implements Runnable {
                 }
             }
         }
+
         for (int y = 0; y < gridSize / 2; y++) {
-            for (int x = 0; x < gridSize / 2; x++) {
+            for (int x = gridSize / 2; x < gridSize; x++) {
                 if (maze[x][y] == 1) {
                     maze[x][y] = 3;
                 }
             }
         }
+
+        for (int y = 0; y < gridSize / 2; y++) {
+            for (int x = 0; x < gridSize / 2; x++) {
+                if (maze[x][y] == 1) {
+                    maze[x][y] = 4;
+                }
+            }
+        }
+
         printScreen();
         camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
+        topDown = new TopDown(camera, maze, gridSize);
         addKeyListener(camera);
         setSize(680, 520);
         setResizable(false);
@@ -59,11 +72,13 @@ public class Maze extends JFrame implements Runnable {
         setTitle("Maze 2.0");
         setLocationRelativeTo(null);
         setVisible(true);
+
         start();
+
     }
 
     public static void main(String[] args) {
-        Maze Maze = new Maze();
+        new Maze();
     }
 
     private static void shuffleArray(int[] array) {
@@ -73,11 +88,9 @@ public class Maze extends JFrame implements Runnable {
             array[index] = array[i];
             array[i] = temp;
         }
-        System.out.println("Shuffled array.");
     }
 
     public static void generateMaze(int row, int col) {
-        System.out.println("Called method: generateMaze");
         maze[row][col] = 0;
         int[] directions = { 0, 1, 2, 3 };
         shuffleArray(directions);
@@ -114,7 +127,6 @@ public class Maze extends JFrame implements Runnable {
     }
 
     public void run() {
-        System.out.println("Called method: run");
         requestFocus();
         double delta = 0;
         long startTime = System.nanoTime();
@@ -126,6 +138,7 @@ public class Maze extends JFrame implements Runnable {
             while (delta >= 1) {
                 camera.update();
                 screen.update(camera, pixels);
+                topDown.update();
                 delta--;
             }
             render();

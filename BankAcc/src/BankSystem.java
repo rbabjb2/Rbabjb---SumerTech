@@ -8,10 +8,10 @@ import java.io.*;
 import java.util.Scanner;
 
 public class BankSystem implements ActionListener {
-    JFrame frame = new JFrame("©®™Saba Bank™®©");
+    JFrame frame = new JFrame("Saba Bank™®");
     JPanel loginPanel = new JPanel();
     JPanel bankPanel = new JPanel();
-    JLabel label = new JLabel("©®™Saba Bank™®©");
+    JLabel label = new JLabel("  Saba Bank™® ");
     JLabel generalLabel = new JLabel("");
     JTextField username = new JTextField("Username", 20);
     JTextField password = new JTextField("Password", 20);
@@ -70,9 +70,10 @@ public class BankSystem implements ActionListener {
             try {
                 amount = Integer.parseInt(input);
 
-                if (account.money >= amount) {
+                if (account.money >= amount && (username.getText().equals("Bob") || amount > 0)) {
                     account.money -= amount;
-                    JOptionPane.showMessageDialog(null, "Withdrawing " + amount + " saba dollars.");
+                    save(username.getText());
+                    JOptionPane.showMessageDialog(null, "Withdrawing " + amount + " sabills.");
                 } else {
                     JOptionPane.showMessageDialog(null, "You can't afford that.");
                 }
@@ -86,12 +87,39 @@ public class BankSystem implements ActionListener {
         }
 
     }
-    public void deposit(Account account) {
 
+    public void deposit(Account account) {
+        int amount;
+        // Use a loop to ensure valid input is received
+        while (true) {
+            String input = JOptionPane.showInputDialog(null, "How much would you like to deposit?");
+
+            if (input == null) {
+                JOptionPane.showMessageDialog(null, "Deposit canceled successfuly.");
+                return;
+            }
+
+            try {
+                amount = Integer.parseInt(input);
+
+                if (amount > 0) {
+                    account.money += amount;
+                    JOptionPane.showInputDialog(null, "Are you sure you have " + amount + " sabills");
+                    JOptionPane.showMessageDialog(null, "Depositing " + amount + " sabills.");
+                }
+
+                break;
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.err.println("MILO WAS HERE");
         switch (e.getActionCommand()) {
             case "Login":
                 if (password.getText().equals(checkNames(username.getText()))) {
@@ -113,8 +141,12 @@ public class BankSystem implements ActionListener {
                 break;
             case "Withdraw":
                 withdraw(currentUser);
+                save(username.getName());
+                break;
             case "Deposit":
-                
+                deposit(currentUser);
+                save(username.getText());
+
         }
     }
 
