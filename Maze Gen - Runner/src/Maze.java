@@ -13,6 +13,9 @@ public class Maze extends JFrame implements Runnable {
     private Thread thread;
     private boolean isRunning;
     private BufferedImage image;
+    int blockFacing = 2;
+    int x = 1;
+    int y = 1;
     public int[] pixels;
     public ArrayList<Texture> textures;
     public Camera camera;
@@ -136,6 +139,7 @@ public class Maze extends JFrame implements Runnable {
     public void run() {
         requestFocus();
         double delta = 0;
+        double startTime2 = System.currentTimeMillis();
         long startTime = System.nanoTime();
         final double frameRate = 1000000000.0 / 60.0;
         while (isRunning) {
@@ -143,9 +147,13 @@ public class Maze extends JFrame implements Runnable {
             delta += ((nanoTime - startTime) / frameRate);
             startTime = nanoTime;
             while (delta >= 1) {
+                if (camera.updateRan == 0) {
+                    turn();
+                }
+
                 camera.update();
                 screen.update(camera, pixels);
-                topDown.update();
+                topDown.update(startTime2);
                 delta--;
             }
             render();
@@ -175,5 +183,11 @@ public class Maze extends JFrame implements Runnable {
         Graphics graphic = bufferStrat.getDrawGraphics();
         graphic.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         bufferStrat.show();
+    }
+
+    public void turn() {
+        if (blockFacing == 1) {
+
+        }
     }
 }

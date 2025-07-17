@@ -4,7 +4,7 @@ public class Camera implements KeyListener {
     public double posX, posY, dirY, dirX, planeY, planeX;
     public boolean left, right, forward, back;
     public final double MOVE_SPEED = 0.08;
-    //wass 0.08
+    //was 0.08
     public final double ROTATION_SPEED = 0.045;
     public int[][] map;
 
@@ -29,7 +29,7 @@ public class Camera implements KeyListener {
 
         }
 
-        if (left) {
+        if (right) {
             double oldDirX = dirX;
             dirX = dirX * Math.cos(ROTATION_SPEED) - dirY * Math.sin(ROTATION_SPEED);
             dirY = oldDirX * Math.sin(ROTATION_SPEED) + dirY * Math.cos(ROTATION_SPEED);
@@ -41,7 +41,7 @@ public class Camera implements KeyListener {
 
         }
 
-        if (right) {
+        if (left) {
             double oldDirX = dirX;
             dirX = dirX * Math.cos(-ROTATION_SPEED) - dirY * Math.sin(-ROTATION_SPEED);
             dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY *

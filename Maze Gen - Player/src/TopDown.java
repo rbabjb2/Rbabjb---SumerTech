@@ -30,24 +30,32 @@ public class TopDown extends JFrame {
         setVisible(true);
     }
 
-    public void update() {
-        for (int i = 0; i < image.getHeight(); i++) {
+    public void update(double startTime) {
+        double nowTime = System.currentTimeMillis();
+        setTitle(Double.toString((nowTime - startTime) / 1000));
+        for (int y = 0; y < image.getHeight(); y++) {
 
-            for (int j = 0; j < image.getWidth(); j++) {
-                if (maze[j / 10][i / 10] == 5) {
-                    pixels[j + (i * image.getHeight())] = Color.BLUE.getRGB();
-                } else if (maze[j / 10][i / 10] != 0) {
-                    pixels[j + (i * image.getHeight())] = Color.WHITE.getRGB();
+            for (int x = 0; x < image.getWidth(); x++) {
+                if (maze[x / 10][y / 10] == 5) {
+                    pixels[x + (y * image.getHeight())] = Color.BLUE.getRGB();
+                } else if (maze[x / 10][y / 10] == 1) {
+                    pixels[x + (y * image.getHeight())] = Color.WHITE.getRGB();
+                } else if (maze[x / 10][y / 10] == 2) {
+                    pixels[x + (y * image.getHeight())] = Color.YELLOW.getRGB();
+                } else if (maze[x / 10][y / 10] == 3) {
+                    pixels[x + (y * image.getHeight())] = Color.RED.getRGB();
+                } else if (maze[x / 10][y / 10] == 4) {
+                    pixels[x + (y * image.getHeight())] = Color.MAGENTA.getRGB();
                 } else {
-                    pixels[j + (i * image.getHeight())] = Color.BLACK.getRGB();
+                    pixels[x + (y * image.getHeight())] = Color.BLACK.getRGB();
                 }
             }
 
         }
-        for (int i = -2; i < 3; i++) {
-            for (int j = -2; j < 3; j++) {
-                pixels[(int) (camera.posX * 10) + j
-                        + (((int) (camera.posY * 10) + i) * image.getHeight())] = Color.GREEN.getRGB();
+        for (int y = -2; y < 3; y++) {
+            for (int x = -2; x < 3; x++) {
+                pixels[(int) (camera.posX * 10) + x
+                        + (((int) (camera.posY * 10) + y) * image.getHeight())] = Color.GREEN.getRGB();
 
             }
         }

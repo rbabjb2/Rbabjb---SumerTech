@@ -28,9 +28,9 @@ public class Texture {
             e.printStackTrace();
         }
     }
-    public static Texture brick = new Texture("res/redbrick.png", 64);
-    public static Texture wood = new Texture("res/wood.png", 64);
-    public static Texture blueStone = new Texture("res/bluestone.png", 64);
+    public static Texture chipmunk = new Texture("res/chipmunk.png", 64);
+    public static Texture squirrel = new Texture("res/squirrel.png", 64);
+    public static Texture mole = new Texture("res/mole.png", 64);
     public static Texture rat = new Texture("res/rat.png", 64);
     public static Texture flag = new Texture("res/flag.png", 64);
 }

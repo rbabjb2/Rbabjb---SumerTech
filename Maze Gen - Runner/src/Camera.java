@@ -3,9 +3,10 @@ import java.awt.event.*;
 public class Camera implements KeyListener {
     public double posX, posY, dirY, dirX, planeY, planeX;
     public boolean left, right, forward, back;
-    public final double MOVE_SPEED = 0.08;
+    public int updateRan = 0;
+    public final double MOVE_SPEED = 0.1;
     // wass 0.08
-    public final double ROTATION_SPEED = 0.045;
+    public final double ROTATION_SPEED = 0.05;
     public int[][] map;
 
     public Camera(double pX, double pY, double dX, double dY, double plX, double plY, int[][] map) {
@@ -20,30 +21,59 @@ public class Camera implements KeyListener {
 
     public void update() {
         if (forward) {
-            if (map[(int) (posX + (dirX * MOVE_SPEED))][(int) posY] == 0) {
-                if (pos) {
-                    posX += dirX * MOVE_SPEED;
-                }
-            }
-            if (map[(int) posX][(int) (posY + (dirY * MOVE_SPEED))] == 0) {
+            if (updateRan < 10) {
+                posX += dirX * MOVE_SPEED;
+                updateRan++;
                 posY += dirY * MOVE_SPEED;
+            } else {
+                forward = false;
+                updateRan = 0;
+                // Stops moving forward
             }
 
         }
 
         if (left) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(ROTATION_SPEED) - dirY * Math.sin(ROTATION_SPEED);
-            dirY = oldDirX * Math.sin(ROTATION_SPEED) + dirY * Math.cos(ROTATION_SPEED);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(ROTATION_SPEED) - planeY *
-                    Math.sin(ROTATION_SPEED);
-            planeY = oldPlaneX * Math.sin(ROTATION_SPEED) + planeY *
-                    Math.cos(ROTATION_SPEED);
+            if (updateRan < 31) {
+                double oldDirX = dirX;
+                dirX = dirX * Math.cos(ROTATION_SPEED) - dirY * Math.sin(ROTATION_SPEED);
+                dirY = oldDirX * Math.sin(ROTATION_SPEED) + dirY * Math.cos(ROTATION_SPEED);
+                double oldPlaneX = planeX;
+                planeX = planeX * Math.cos(ROTATION_SPEED) - planeY *
+                        Math.sin(ROTATION_SPEED);
+                planeY = oldPlaneX * Math.sin(ROTATION_SPEED) + planeY *
+                        Math.cos(ROTATION_SPEED);
+                updateRan++;
+            } else {
+                left = false;
+                updateRan = 0;
+                dirX = Math.round(dirX);
+                dirY = Math.round(dirY);
+                if (dirX == 0 && dirY == 1) {
+                    planeX = 0.66;
+                    planeY = 0.0;
+                } else if (dirX == -1 && dirY == 0) {
+                    planeX = 0.0;
+                    planeY = 0.66;
+                } else if (dirX == 0 && dirY == -1) {
+                    planeX = -0.66;
+                    planeY = 0.0;
+                } else {
+                    planeX = -0.0;
+                    planeY = -0.66;
+                }
+
+                // System.out.println("PlaneX is " + planeX);
+                // System.out.println("PlaneY is " + planeY);
+                // System.out.println("dirX is " + dirX);
+                // System.out.println("dirY is " + dirY);
+
+            }
 
         }
 
         if (right) {
+            if (updateRan < 31) {
             double oldDirX = dirX;
             dirX = dirX * Math.cos(-ROTATION_SPEED) - dirY * Math.sin(-ROTATION_SPEED);
             dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY *
@@ -53,14 +83,37 @@ public class Camera implements KeyListener {
                     Math.sin(-ROTATION_SPEED);
             planeY = oldPlaneX * Math.sin(-ROTATION_SPEED) + planeY *
                     Math.cos(-ROTATION_SPEED);
+                updateRan++;
+            } else {
+                right = false;
+                updateRan = 0;
+                dirX = Math.round(dirX);
+                dirY = Math.round(dirY);
+                if (dirX == 0 && dirY == 1) {
+                    planeX = 0.66;
+                    planeY = 0.0;
+                } else if (dirX == -1 && dirY == 0) {
+                    planeX = 0.0;
+                    planeY = 0.66;
+                } else if (dirX == 0 && dirY == -1) {
+                    planeX = -0.66;
+                    planeY = 0.0;
+                } else {
+                    planeX = -0.0;
+                    planeY = -0.66;
+                }
+            }
         }
 
         if (back) {
-            if (map[(int) (posX - (dirX * MOVE_SPEED))][(int) posY] == 0 || map[(int) (posX - (dirX * MOVE_SPEED))][(int) posY] == 5) {
+            if (updateRan < 10) {
                 posX -= dirX * MOVE_SPEED;
-            }
-            if (map[(int) posX][(int) (posY - (dirY * MOVE_SPEED))] == 0 || map[(int) posX][(int) (posY - (dirY * MOVE_SPEED))] == 5) {
                 posY -= dirY * MOVE_SPEED;
+                updateRan++;
+            } else {
+                back = false;
+                updateRan = 0;
+                // Stops
             }
         }
     }
@@ -94,22 +147,6 @@ public class Camera implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.VK_W:
-                forward = false;
-                break;
-            case KeyEvent.VK_S:
-                back = false;
-                break;
-            case KeyEvent.VK_A:
-                left = false;
-                break;
-            case KeyEvent.VK_D:
-                right = false;
-                break;
-        }
-
     }
 
     @Override

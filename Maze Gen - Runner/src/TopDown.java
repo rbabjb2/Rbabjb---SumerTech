@@ -30,10 +30,12 @@ public class TopDown extends JFrame {
         setVisible(true);
     }
 
-    public void update() {
-        for (int i = 0; i < image.getHeight(); i++) {
+    public void update(double startTime) {
+        double nowTime = System.currentTimeMillis();
+        setTitle(Double.toString((nowTime - startTime) / 1000));
+        for (int j = 0; j < image.getHeight(); j++) {
 
-            for (int j = 0; j < image.getWidth(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
                 if (maze[j / 10][i / 10] == 5) {
                     pixels[j + (i * image.getHeight())] = Color.BLUE.getRGB();
                 } else if (maze[j / 10][i / 10] != 0) {
