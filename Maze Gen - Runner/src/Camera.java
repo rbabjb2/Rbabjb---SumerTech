@@ -4,8 +4,8 @@ public class Camera implements KeyListener {
     public double posX, posY, dirY, dirX, planeY, planeX;
     public boolean left, right, forward, back;
     public int updateRan = 0;
-    public final double MOVE_SPEED = 0.1;
-    // wass 0.08
+    public final double MOVE_SPEED = 0.05;
+    // wass 0.1
     public final double ROTATION_SPEED = 0.05;
     public int[][] map;
 
@@ -21,7 +21,7 @@ public class Camera implements KeyListener {
 
     public void update() {
         if (forward) {
-            if (updateRan < 10) {
+            if (updateRan < 20) {
                 posX += dirX * MOVE_SPEED;
                 updateRan++;
                 posY += dirY * MOVE_SPEED;
@@ -33,7 +33,7 @@ public class Camera implements KeyListener {
 
         }
 
-        if (left) {
+        if (right) {
             if (updateRan < 31) {
                 double oldDirX = dirX;
                 dirX = dirX * Math.cos(ROTATION_SPEED) - dirY * Math.sin(ROTATION_SPEED);
@@ -45,22 +45,23 @@ public class Camera implements KeyListener {
                         Math.cos(ROTATION_SPEED);
                 updateRan++;
             } else {
-                left = false;
+                right = false;
                 updateRan = 0;
                 dirX = Math.round(dirX);
                 dirY = Math.round(dirY);
+
                 if (dirX == 0 && dirY == 1) {
-                    planeX = 0.66;
+                    planeX = -0.66;
                     planeY = 0.0;
                 } else if (dirX == -1 && dirY == 0) {
                     planeX = 0.0;
-                    planeY = 0.66;
+                    planeY = -0.66;
                 } else if (dirX == 0 && dirY == -1) {
-                    planeX = -0.66;
+                    planeX = 0.66;
                     planeY = 0.0;
                 } else {
-                    planeX = -0.0;
-                    planeY = -0.66;
+                    planeX = 0.0;
+                    planeY = 0.66;
                 }
 
                 // System.out.println("PlaneX is " + planeX);
@@ -72,49 +73,43 @@ public class Camera implements KeyListener {
 
         }
 
-        if (right) {
+        if (left) {
             if (updateRan < 31) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(-ROTATION_SPEED) - dirY * Math.sin(-ROTATION_SPEED);
-            dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY *
-                    Math.cos(-ROTATION_SPEED);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(-ROTATION_SPEED) - planeY *
-                    Math.sin(-ROTATION_SPEED);
-            planeY = oldPlaneX * Math.sin(-ROTATION_SPEED) + planeY *
-                    Math.cos(-ROTATION_SPEED);
+                double oldDirX = dirX;
+                dirX = dirX * Math.cos(-ROTATION_SPEED) - dirY * Math.sin(-ROTATION_SPEED);
+                dirY = oldDirX * Math.sin(-ROTATION_SPEED) + dirY *
+                        Math.cos(-ROTATION_SPEED);
+                double oldPlaneX = planeX;
+                planeX = planeX * Math.cos(-ROTATION_SPEED) - planeY *
+                        Math.sin(-ROTATION_SPEED);
+                planeY = oldPlaneX * Math.sin(-ROTATION_SPEED) + planeY *
+                        Math.cos(-ROTATION_SPEED);
                 updateRan++;
             } else {
-                right = false;
+                left = false;
                 updateRan = 0;
                 dirX = Math.round(dirX);
                 dirY = Math.round(dirY);
                 if (dirX == 0 && dirY == 1) {
-                    planeX = 0.66;
+                    planeX = -0.66;
                     planeY = 0.0;
                 } else if (dirX == -1 && dirY == 0) {
                     planeX = 0.0;
-                    planeY = 0.66;
+                    planeY = -0.66;
                 } else if (dirX == 0 && dirY == -1) {
-                    planeX = -0.66;
+                    planeX = 0.66;
                     planeY = 0.0;
                 } else {
                     planeX = -0.0;
-                    planeY = -0.66;
+                    planeY = 0.66;
                 }
             }
         }
 
         if (back) {
-            if (updateRan < 10) {
-                posX -= dirX * MOVE_SPEED;
-                posY -= dirY * MOVE_SPEED;
-                updateRan++;
-            } else {
-                back = false;
-                updateRan = 0;
-                // Stops
-            }
+            posX -= dirX * MOVE_SPEED;
+            posY -= dirY * MOVE_SPEED;
+            updateRan++;
         }
     }
 
@@ -129,19 +124,7 @@ public class Camera implements KeyListener {
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
                 break;
-            case KeyEvent.VK_W:
-                forward = true;
-                break;
-            case KeyEvent.VK_S:
-                back = true;
-                break;
-            case KeyEvent.VK_A:
 
-                left = true;
-                break;
-            case KeyEvent.VK_D:
-                right = true;
-                break;
         }
     }
 

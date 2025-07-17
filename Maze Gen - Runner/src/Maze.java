@@ -7,13 +7,16 @@ import java.awt.image.*;
 @SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
     static Random random = new Random();
-    static int gridSize = 31;
+    static int gridSize = 21;
     TopDown topDown;
     private static int maze[][] = new int[gridSize][gridSize];
     private Thread thread;
     private boolean isRunning;
     private BufferedImage image;
-    int blockFacing = 2;
+    final int width = 1000;
+    final int height = 680;
+    String lastMove = null;
+    int blockFacing = 4;
     int x = 1;
     int y = 1;
     public int[] pixels;
@@ -22,7 +25,7 @@ public class Maze extends JFrame implements Runnable {
     public Screen screen;
 
     public Maze() {
-        image = new BufferedImage(680, 520, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
@@ -31,7 +34,7 @@ public class Maze extends JFrame implements Runnable {
         textures.add(Texture.blueStone);
         textures.add(Texture.rat);
         textures.add(Texture.flag);
-        screen = new Screen(maze, textures, 680, 520, gridSize);
+        screen = new Screen(maze, textures, width, height, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 /*
@@ -72,10 +75,10 @@ public class Maze extends JFrame implements Runnable {
         }
 
         printScreen();
-        camera = new Camera(1.5, 1.5, 1, 0, 0, -0.66, maze);
+        camera = new Camera(1.5, 1.5, -1, 0, 0, -0.66, maze);
         topDown = new TopDown(camera, maze, gridSize);
         addKeyListener(camera);
-        setSize(680, 520);
+        setSize(width, height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBackground(Color.PINK);
@@ -130,7 +133,7 @@ public class Maze extends JFrame implements Runnable {
     public static void printScreen() {
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
-                System.out.print(maze[y][x]);
+                System.out.print(maze[x][y]);
             }
             System.out.println();
         }
@@ -148,9 +151,22 @@ public class Maze extends JFrame implements Runnable {
             startTime = nanoTime;
             while (delta >= 1) {
                 if (camera.updateRan == 0) {
-                    turn();
+                    if (lastMove != "turn") {
+                        turn();
+                    } else {
+                        lastMove = "forward";
+                        camera.forward = true;
+                        if (blockFacing == 1) {
+                            y -= 1;
+                        } else if (blockFacing == 2) {
+                            x += 1;
+                        } else if (blockFacing == 3) {
+                            y += 1;
+                        } else {
+                            x -= 1;
+                        }
+                    }
                 }
-
                 camera.update();
                 screen.update(camera, pixels);
                 topDown.update(startTime2);
@@ -187,7 +203,80 @@ public class Maze extends JFrame implements Runnable {
 
     public void turn() {
         if (blockFacing == 1) {
-
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.back = true;
+            } else if (maze[x - 1][y] == 0) {
+                camera.left = true;
+                blockFacing = 4;
+                lastMove = "turn";
+            } else if (maze[x][y - 1] == 0) {
+                camera.forward = true;
+                y -= 1;
+            } else if (maze[x + 1][y] == 0) {
+                camera.right = true;
+                blockFacing = 2;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 4;
+            }
+        } else if (blockFacing == 2) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 3;
+            } else if (maze[x][y - 1] == 0) {
+                camera.left = true;
+                blockFacing = 1;
+                lastMove = "turn";
+            } else if (maze[x + 1][y] == 0) {
+                camera.forward = true;
+                x += 1;
+            } else if (maze[x][y + 1] == 0) {
+                camera.right = true;
+                blockFacing = 3;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 1;
+            }
+        } else if (blockFacing == 3) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 4;
+            } else if (maze[x + 1][y] == 0) {
+                camera.left = true;
+                blockFacing = 2;
+                lastMove = "turn";
+            } else if (maze[x][y + 1] == 0) {
+                camera.forward = true;
+                y += 1;
+            } else if (maze[x - 1][y] == 0) {
+                camera.right = true;
+                blockFacing = 4;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 2;
+            }
+        } else if (blockFacing == 4) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 1;
+            } else if (maze[x][y + 1] == 0) {
+                camera.left = true;
+                blockFacing = 3;
+                lastMove = "turn";
+            } else if (maze[x - 1][y] == 0) {
+                camera.forward = true;
+                x -= 1;
+            } else if (maze[x][y - 1] == 0) {
+                camera.right = true;
+                blockFacing = 1;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 3;
+            }
         }
     }
 }
