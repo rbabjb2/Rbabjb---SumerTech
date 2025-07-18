@@ -103,7 +103,8 @@ public class Screen {
                 if (side == 0) {
                     color = textures.get(textureNum).pixels[textureX + (textureY * textures.get(textureNum).size)];
                 } else {
-                    color = (textures.get(textureNum).pixels[textureX + (textureY * textures.get(textureNum).size)] >> 1) & 8355711;
+                    color = (textures.get(textureNum).pixels[textureX
+                            + (textureY * textures.get(textureNum).size)] >> 1) & 8355711;
                 }
                 pixels[x + y * width] = color;
             }

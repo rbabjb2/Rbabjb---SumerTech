@@ -13,9 +13,11 @@ public class TopDown extends JFrame {
     public int[] pixels;
     public ArrayList<Texture> textures;
     public Camera camera;
+    public Camera plr2;
 
     @SuppressWarnings("static-access")
-    public TopDown(Camera cam, int[][] maze, int gridSize) {
+    public TopDown(Camera cam, int[][] maze, int gridSize, Camera plr2) {
+        this.plr2 = plr2;
         this.maze = maze;
         this.gridSize = gridSize;
         camera = cam;
@@ -23,7 +25,7 @@ public class TopDown extends JFrame {
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         setSize((gridSize * 10) + 13, (gridSize * 10) + 39);
         setResizable(false);
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setBackground(Color.PINK);
         setTitle("Map");
         setLocation(0, 0);
@@ -50,6 +52,13 @@ public class TopDown extends JFrame {
             for (int j = -2; j < 3; j++) {
                 pixels[(int) (camera.posX * 10) + j
                         + (((int) (camera.posY * 10) + i) * image.getHeight())] = Color.GREEN.getRGB();
+
+            }
+        }
+        for (int i = -2; i < 3; i++) {
+            for (int j = -2; j < 3; j++) {
+                pixels[(int) (plr2.posX * 10) + j
+                        + (((int) (plr2.posY * 10) + i) * image.getHeight())] = Color.YELLOW.getRGB();
 
             }
         }

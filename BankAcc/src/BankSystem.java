@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -26,7 +28,7 @@ public class BankSystem implements ActionListener {
 
     public BankSystem() {
         frame.setSize(600, 400);
-        frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         label.setSize(new Dimension(200, 100));
         label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
@@ -63,7 +65,6 @@ public class BankSystem implements ActionListener {
             String input = JOptionPane.showInputDialog(null, "How much would you like to withdraw?");
 
             if (input == null) {
-                JOptionPane.showMessageDialog(null, "Withdraw canceled successfuly.");
                 return;
             }
 
@@ -194,6 +195,9 @@ public class BankSystem implements ActionListener {
             scanner.close();
         } catch (FileNotFoundException e) {
 
+        }
+        if (currentUser.premiumAcc) {
+            bankPanel.setBackground(Color.YELLOW);
         }
         bankPanel.setLayout(new BoxLayout(bankPanel, BoxLayout.Y_AXIS));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);

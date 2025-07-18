@@ -19,9 +19,14 @@ public class Maze extends JFrame implements Runnable {
     int blockFacing = 4;
     int x = 1;
     int y = 1;
+    String lastMove2 = null;
+    int blockFacing2 = 4;
+    int x2 = 1;
+    int y2 = 1;
     public int[] pixels;
     public ArrayList<Texture> textures;
     public Camera camera;
+    public Camera plr2;
     public Screen screen;
 
     public Maze() {
@@ -76,7 +81,8 @@ public class Maze extends JFrame implements Runnable {
 
         printScreen();
         camera = new Camera(1.5, 1.5, -1, 0, 0, -0.66, maze);
-        topDown = new TopDown(camera, maze, gridSize);
+        plr2 = new Camera(1.5, 1.5, -1, 0, 0, -0.66, maze);
+        topDown = new TopDown(camera, maze, gridSize, plr2);
         addKeyListener(camera);
         setSize(width, height);
         setResizable(false);
@@ -168,6 +174,24 @@ public class Maze extends JFrame implements Runnable {
                     }
                 }
                 camera.update();
+                if (plr2.updateRan == 0) {
+                    if (lastMove2 != "turn") {
+                        turn();
+                    } else {
+                        lastMove2 = "forward";
+                        plr2.forward = true;
+                        if (blockFacing2 == 1) {
+                            y2 -= 1;
+                        } else if (blockFacing2 == 2) {
+                            x2 += 1;
+                        } else if (blockFacing2 == 3) {
+                            y2 += 1;
+                        } else {
+                            x2 -= 1;
+                        }
+                    }
+                }
+                plr2.update();
                 screen.update(camera, pixels);
                 topDown.update(startTime2);
                 delta--;
@@ -259,6 +283,85 @@ public class Maze extends JFrame implements Runnable {
                 blockFacing = 2;
             }
         } else if (blockFacing == 4) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 1;
+            } else if (maze[x][y + 1] == 0) {
+                camera.left = true;
+                blockFacing = 3;
+                lastMove = "turn";
+            } else if (maze[x - 1][y] == 0) {
+                camera.forward = true;
+                x -= 1;
+            } else if (maze[x][y - 1] == 0) {
+                camera.right = true;
+                blockFacing = 1;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 3;
+            }
+        }
+    }
+
+    public void turnPlr2() {
+        if (blockFacing2 == 1) {
+            if (x2 == gridSize - 2 && y2 == gridSize - 2) {
+                plr2.back = true;
+            } else if (maze[x2 - 1][y2] == 0) {
+                plr2.left = true;
+                blockFacing2 = 4;
+                lastMove2 = "turn";
+            } else if (maze[x2][y2 - 1] == 0) {
+                plr2.forward = true;
+                y2 -= 1;
+            } else if (maze[x + 1][y] == 0) {
+                plr2.right = true;
+                blockFacing2 = 2;
+                lastMove2 = "turn";
+            } else {
+                plr2.left = true;
+                blockFacing2 = 4;
+            }
+        } else if (blockFacing2 == 2) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 3;
+            } else if (maze[x][y - 1] == 0) {
+                camera.left = true;
+                blockFacing = 1;
+                lastMove = "turn";
+            } else if (maze[x + 1][y] == 0) {
+                camera.forward = true;
+                x += 1;
+            } else if (maze[x][y + 1] == 0) {
+                camera.right = true;
+                blockFacing = 3;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 1;
+            }
+        } else if (blockFacing2 == 3) {
+            if (x == gridSize - 2 && y == gridSize - 2) {
+                camera.right = true;
+                blockFacing = 4;
+            } else if (maze[x + 1][y] == 0) {
+                camera.left = true;
+                blockFacing = 2;
+                lastMove = "turn";
+            } else if (maze[x][y + 1] == 0) {
+                camera.forward = true;
+                y += 1;
+            } else if (maze[x - 1][y] == 0) {
+                camera.right = true;
+                blockFacing = 4;
+                lastMove = "turn";
+            } else {
+                camera.left = true;
+                blockFacing = 2;
+            }
+        } else if (blockFacing2 == 4) {
             if (x == gridSize - 2 && y == gridSize - 2) {
                 camera.right = true;
                 blockFacing = 1;

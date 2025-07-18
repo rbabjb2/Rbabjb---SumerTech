@@ -7,7 +7,7 @@ import java.awt.image.*;
 @SuppressWarnings("unused")
 public class Maze extends JFrame implements Runnable {
     static Random random = new Random();
-    static int gridSize = 45;
+    static int gridSize = 21;
     TopDown topDown;
     private static int maze[][] = new int[gridSize][gridSize];
     private Thread thread;
@@ -20,7 +20,7 @@ public class Maze extends JFrame implements Runnable {
     public Screen screen;
 
     public Maze() {
-        image = new BufferedImage(680, 520, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(680, 600, BufferedImage.TYPE_INT_RGB);
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         thread = new Thread(this);
         textures = new ArrayList<Texture>();
@@ -29,15 +29,15 @@ public class Maze extends JFrame implements Runnable {
         textures.add(Texture.mole);
         textures.add(Texture.rat);
         textures.add(Texture.flag);
-        screen = new Screen(maze, textures, 680, 520, gridSize);
+        screen = new Screen(maze, textures, 680, 600, gridSize);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
 
-                // if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) {
-                // maze[i][j] = 1;
-                // } else {
-                // maze[i][j] = 0;
-                // }
+                //if (i == 0 || j == 0 || i == gridSize - 1 || j == gridSize - 1) {
+                //maze[i][j] = 1;
+                //} else {
+                //maze[i][j] = 0;
+                //}
 
                 maze[i][j] = 1;
             }
@@ -70,10 +70,15 @@ public class Maze extends JFrame implements Runnable {
         }
 
         printScreen();
+        int value = 0x2222;
+        int chipmunks = 0x00F0;
+        System.out.println(value);
+        System.out.println(chipmunks);
+        System.out.println(value & chipmunks);
         camera = new Camera(1.5, 1.5, -1, 0, 0, -0.66, maze);
         topDown = new TopDown(camera, maze, gridSize);
         addKeyListener(camera);
-        setSize(680, 520);
+        setSize(680, 600);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBackground(Color.PINK);
