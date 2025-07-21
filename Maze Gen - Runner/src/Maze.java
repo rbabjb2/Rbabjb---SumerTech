@@ -159,9 +159,11 @@ public class Maze extends JFrame implements Runnable {
                 if (camera.updateRan == 0) {
                     if (lastMove != "turn") {
                         turn();
+                        System.out.println("Last move is turn");
                     } else {
                         lastMove = "forward";
                         camera.forward = true;
+                        System.out.println("Last move is forward");
                         if (blockFacing == 1) {
                             y -= 1;
                         } else if (blockFacing == 2) {
@@ -171,12 +173,13 @@ public class Maze extends JFrame implements Runnable {
                         } else {
                             x -= 1;
                         }
+                        System.out.println(maze[x][y]);
                     }
                 }
                 camera.update();
                 if (plr2.updateRan == 0) {
                     if (lastMove2 != "turn") {
-                        turn();
+                        turnPlr2();
                     } else {
                         lastMove2 = "forward";
                         plr2.forward = true;
@@ -282,6 +285,7 @@ public class Maze extends JFrame implements Runnable {
                 camera.left = true;
                 blockFacing = 2;
             }
+
         } else if (blockFacing == 4) {
             if (x == gridSize - 2 && y == gridSize - 2) {
                 camera.right = true;
