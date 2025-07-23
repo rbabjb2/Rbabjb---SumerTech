@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.awt.Image;
 import javax.imageio.*;
 
@@ -13,18 +14,28 @@ public class UndecoratedImageFrame extends JFrame {
     public UndecoratedImageFrame(BufferedImage image) {
         this.image = image;
 
-        // 1. Create an Undecorated JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(true); // Remove border and title bar
+        setUndecorated(true);
 
-        // 2. Create a Custom JPanel for Drawing
-        MyImagePanel panel = new MyImagePanel();
-        add(panel);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
 
-        // 5. Set Frame Properties and Make it Visible
-        pack(); // Size the frame to fit the panel
-        setLocationRelativeTo(null); // Center the frame on the screen
-        setVisible(true); // Display the frame
+        MyImagePanel img = new MyImagePanel();
+
+        while (true) {
+            try {
+                Thread.sleep(50);
+                setLocation(getX() + 1, 100);
+                img.reload();
+                invalidate();
+                validate();
+                repaint();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     // Custom JPanel to draw the BufferedImage
@@ -42,9 +53,9 @@ public class UndecoratedImageFrame extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        // Create a sample BufferedImage (replace with your actual image loading)
-        try {
+    public static void main(String[] args) throws IOException {
+        System.out.println("Main Method");
+
         BufferedImage img = ImageIO.read(new File("5.png"));
         BufferedImage img2 = new BufferedImage(300, 200, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img2.createGraphics();
@@ -55,8 +66,18 @@ public class UndecoratedImageFrame extends JFrame {
         g2d.dispose();
 
         SwingUtilities.invokeLater(() -> new UndecoratedImageFrame(img));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public void reload() throws IOException {
+        BufferedImage img = ImageIO.read(new File("5.png"));
+        BufferedImage img2 = new BufferedImage(300, 200, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img2.createGraphics();
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.fillRect(0, 0, 300, 200);
+        g2d.setColor(Color.BLUE);
+        g2d.drawImage(img, 0, 0, Color.RED, null);
+        g2d.dispose();
+
+        SwingUtilities.invokeLater(() -> new UndecoratedImageFrame(img));
     }
 }
