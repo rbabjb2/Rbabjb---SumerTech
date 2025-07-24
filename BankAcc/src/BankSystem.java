@@ -10,13 +10,14 @@ import java.io.*;
 import java.util.Scanner;
 
 public class BankSystem implements ActionListener {
-    JFrame frame = new JFrame("Saba Bank™®");
+    JFrame frame = new JFrame("This is *not* a legal bank under supervision of Bank of Saba");
     JPanel loginPanel = new JPanel();
     JPanel bankPanel = new JPanel();
-    JLabel label = new JLabel("  Saba Bank™® ");
+    JLabel label = new JLabel("Not Saba Bank™®");
     JLabel generalLabel = new JLabel("");
     JTextField username = new JTextField("Username", 20);
-    JTextField password = new JTextField("Password", 20);
+    JPasswordField password = new JPasswordField("ARLO WAS HERE", 20);
+    JButton becomePremium;
     JButton withdraw = new JButton("Withdraw");
     JButton deposit = new JButton("Deposit");
     JButton loginButton = new JButton("Login");
@@ -30,25 +31,35 @@ public class BankSystem implements ActionListener {
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
+
         label.setSize(new Dimension(200, 100));
         label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
+
         username.setAlignmentX(Component.CENTER_ALIGNMENT);
         password.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         loginPanel.add(label);
         loginPanel.add(username);
         loginPanel.add(password);
+
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         registerButton.addActionListener(this);
         registerButton.setActionCommand("Register");
+
         loginButton.addActionListener(this);
         loginButton.setActionCommand("Login");
+
         loginPanel.add(new Box.Filler(new Dimension(250, 50), new Dimension(150, 25), new Dimension(250, 35)));
         loginPanel.add(loginButton);
         loginPanel.add(registerButton);
         loginPanel.add(new Box.Filler(new Dimension(250, 50), new Dimension(150, 25), new Dimension(250, 35)));
+
         generalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        loginPanel.add(new Box.Filler(new Dimension(25, 50), new Dimension(45, 25), new Dimension(70, 35)));
         loginPanel.add(generalLabel);
+
         frame.add(loginPanel);
         frame.setVisible(true);
 
@@ -91,7 +102,6 @@ public class BankSystem implements ActionListener {
 
     public void deposit(Account account) {
         int amount;
-        // Use a loop to ensure valid input is received
         while (true) {
             String input = JOptionPane.showInputDialog(null, "How much would you like to deposit?");
 
@@ -123,9 +133,9 @@ public class BankSystem implements ActionListener {
         System.err.println("MILO WAS HERE");
         switch (e.getActionCommand()) {
             case "Login":
-                if (password.getText().equals(checkNames(username.getText()))) {
+                if (new String(password.getPassword()).equals(checkNames(username.getText()))) {
                     System.out.println("You are logged in as " + username.getText());
-                    loginSuccess(username.getText(), password.getText());
+                    loginSuccess(username.getText(), new String(password.getPassword()));
                     loginPanel.removeAll();
                     frame.remove(loginPanel);
                     frame.invalidate();
@@ -138,7 +148,7 @@ public class BankSystem implements ActionListener {
                 }
                 break;
             case "Register":
-                register(username.getText(), password.getText());
+                register(username.getText(), new String(password.getPassword()));
                 break;
             case "Withdraw":
                 withdraw(currentUser);
@@ -147,7 +157,30 @@ public class BankSystem implements ActionListener {
             case "Deposit":
                 deposit(currentUser);
                 save(username.getText());
-
+                break;
+            case "Manage":
+                int choice = JOptionPane.showConfirmDialog(null, "Do you want to change your status?");
+                if (choice == JOptionPane.YES_OPTION) {
+                    if (currentUser.premiumAcc) {
+                        int desicion = JOptionPane.showConfirmDialog(null,
+                                "Are you sure you want to lose your premium status?");
+                        if (desicion == JOptionPane.YES_OPTION) {
+                            currentUser.premiumAcc = false;
+                            bankPanel.setBackground(Color.white);
+                            save(username.getText());
+                        }
+                    } else {
+                        if (currentUser.money >= 100) {
+                            currentUser.premiumAcc = true;
+                            currentUser.money -= 100;
+                            bankPanel.setBackground(new Color(255, 215, 0));
+                            save(username.getText());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "You can't afford that.", "Manage Accounts",
+                                    JOptionPane.OK_OPTION, null);
+                        }
+                    }
+                }
         }
     }
 
@@ -197,11 +230,12 @@ public class BankSystem implements ActionListener {
 
         }
         if (currentUser.premiumAcc) {
-            bankPanel.setBackground(Color.YELLOW);
+            bankPanel.setBackground(new Color(255, 215, 0));
         }
         bankPanel.setLayout(new BoxLayout(bankPanel, BoxLayout.Y_AXIS));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        generalLabel.setText("Welcome " + usernameStr);
+        generalLabel.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));
+        generalLabel.setText("You have " + currentUser.money + " sabills.");
         generalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         withdraw.setAlignmentX(Component.CENTER_ALIGNMENT);
         withdraw.addActionListener(this);
@@ -214,6 +248,13 @@ public class BankSystem implements ActionListener {
         bankPanel.add(new Box.Filler(new Dimension(25, 50), new Dimension(50, 10), new Dimension(75, 25)));
         bankPanel.add(deposit);
         bankPanel.add(generalLabel);
+        becomePremium = new JButton("Manage Account Plan");
+        becomePremium.addActionListener(this);
+        becomePremium.setActionCommand("Manage");
+        becomePremium.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        bankPanel.add(new Box.Filler(new Dimension(50, 50), new Dimension(75, 10), new Dimension(100, 25)));
+        bankPanel.add(becomePremium);
         frame.add(bankPanel);
     }
 
@@ -239,5 +280,6 @@ public class BankSystem implements ActionListener {
 
         }
     }
+
 
 }
